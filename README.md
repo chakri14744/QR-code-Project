@@ -1,2 +1,204 @@
-# QR-code-Project
-This is first project with QR generator
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Star QR Code Generator</title>
+
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 30px;
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    input {
+      padding: 12px;
+      width: 280px;
+      margin-bottom: 20px;
+      border: none;
+      border-radius: 8px;
+      outline: none;
+      font-size: 16px;
+    }
+
+    .buttons button {
+      padding: 10px 20px;
+      margin: 5px;
+      background-color: #ffcc00;
+      color: black;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .qr-wrapper {
+      display: inline-block;
+      padding: 15px;
+      margin-top: 20px;
+      border: 5px solid #ffd700;
+      border-radius: 15px;
+      animation: bounce 2s infinite;
+      background: white;
+    }
+
+    #qrcode {
+      display: inline-block;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* Floating Stars */
+    .stars {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .stars span {
+      position: absolute;
+      display: block;
+      font-size: 20px;
+      color: #ffeb3b;
+      bottom: -60px;
+      animation: floatStar 12s infinite ease-in;
+      opacity: 0.8;
+    }
+
+    .stars span:nth-child(1) {
+      left: 10%;
+      animation-duration: 10s;
+      font-size: 25px;
+    }
+
+    .stars span:nth-child(2) {
+      left: 25%;
+      animation-duration: 8s;
+    }
+
+    .stars span:nth-child(3) {
+      left: 40%;
+      animation-duration: 11s;
+      font-size: 18px;
+    }
+
+    .stars span:nth-child(4) {
+      left: 55%;
+      animation-duration: 9s;
+      font-size: 22px;
+    }
+
+    .stars span:nth-child(5) {
+      left: 70%;
+      animation-duration: 7s;
+      font-size: 26px;
+    }
+
+    .stars span:nth-child(6) {
+      left: 85%;
+      animation-duration: 10s;
+      font-size: 19px;
+    }
+
+    @keyframes floatStar {
+      0% {
+        bottom: -60px;
+        opacity: 0;
+        transform: translateX(0) scale(0.5) rotate(0deg);
+      }
+      50% {
+        opacity: 1;
+        transform: translateX(10px) scale(1) rotate(180deg);
+      }
+      100% {
+        bottom: 100%;
+        opacity: 0;
+        transform: translateX(-10px) scale(0.5) rotate(360deg);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating Stars -->
+  <div class="stars">
+    <span>⭐</span><span>⭐</span><span>⭐</span>
+    <span>⭐</span><span>⭐</span><span>⭐</span>
+  </div>
+
+  <div class="container">
+    <h1 style="color: white;">QR Code Generator</h1>
+    <input type="text" id="qrText" placeholder="Enter text or URL..." />
+    <div class="buttons">
+      <button onclick="generateQR()">Generate QR</button>
+      <button onclick="downloadQR()">⬇ Download</button>
+    </div>
+    <div class="qr-wrapper">
+      <div id="qrcode"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+  <script>
+    let qrCode;
+
+    function generateQR() {
+      const qrText = document.getElementById("qrText").value;
+      const qrContainer = document.getElementById("qrcode");
+      qrContainer.innerHTML = "";
+
+      if (!qrText) {
+        alert("Please enter something!");
+        return;
+      }
+
+      qrCode = new QRCode(qrContainer, {
+        text: qrText,
+        width: 200,
+        height: 200,
+        colorDark: "#000000",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.H
+      });
+    }
+
+    function downloadQR() {
+      if (!qrCode) return alert("Generate a QR code first!");
+      const img = document.querySelector('#qrcode img');
+      if (img) {
+        const a = document.createElement('a');
+        a.href = img.src;
+        a.download = "qr-code.png";
+        a.click();
+      } else {
+        alert("Please wait for QR code to render.");
+      }
+    }
+  </script>
+</body>
+</html>
